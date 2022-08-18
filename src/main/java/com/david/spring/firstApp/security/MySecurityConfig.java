@@ -1,5 +1,6 @@
 package com.david.spring.firstApp.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -27,9 +28,11 @@ import java.util.List;
 @Configuration
 public class MySecurityConfig  {
 
+    @Autowired
+    private MyAuthenticationProvider myAuthenticationProvider;
+
     @Bean
     public PasswordEncoder encoder() {
-        //return new Md4PasswordEncoder();
         return new BCryptPasswordEncoder();
     }
 
@@ -41,45 +44,17 @@ public class MySecurityConfig  {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //return generatePermitAll(http);
-        //return generateDefault(http);
-        return generateInMemory(http);
+
+        return myAuthunication(http);
 
     }
 
-    private SecurityFilterChain generateInMemory(HttpSecurity http) throws Exception {
-        //generate password from painText
-        //PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
-        // outputs {bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG
-
-
-        InMemoryUserDetailsManager userDetailService = new InMemoryUserDetailsManager();
-        UserDetails user = User
-                .withUsername("david")
-                .password(encoder().encode("password"))
-                .authorities("read")
-                .build();
-
-        userDetailService.createUser(user);
-
-
-        http.authorizeRequests(authz -> authz.anyRequest().authenticated())
+    private SecurityFilterChain myAuthunication(HttpSecurity http) throws Exception {
+        return http.authorizeRequests(authz -> authz.anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .userDetailsService(userDetailService);
-        return http.build();
+                .authenticationProvider(myAuthenticationProvider).build();
     }
 
-    private SecurityFilterChain generateDefault(HttpSecurity http) throws Exception {
-        return http
-                .authorizeRequests((authz)-> authz.anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .build();
-    }
 
-    private SecurityFilterChain generatePermitAll(HttpSecurity http) throws Exception {
-        return http
-                .authorizeRequests(authz-> authz.anyRequest().permitAll())
-                .build();
-    }
+
 }
