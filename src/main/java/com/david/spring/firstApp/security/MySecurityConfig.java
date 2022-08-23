@@ -4,6 +4,7 @@ import com.david.spring.firstApp.security.filter.MyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,8 +41,9 @@ public class MySecurityConfig  {
     private SecurityFilterChain myAuthunication(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests(authz -> authz
-                        .antMatchers("/hello").hasAuthority("READ")
-                        .anyRequest().denyAll())
+                        .mvcMatchers(HttpMethod.GET,"/hello").hasAnyAuthority("READ","ADMIN")
+                        .mvcMatchers(HttpMethod.GET,"/bye").hasAnyAuthority("ADMIN")
+                        .anyRequest().denyAll()).cors().disable()
                 .httpBasic(Customizer.withDefaults())
                 .userDetailsService(userDetailsServiceImpl)
                 .build();

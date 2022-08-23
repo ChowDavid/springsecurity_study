@@ -19,7 +19,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //load DBA for a user by username
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        authorityList.add(new SimpleGrantedAuthority("READ"));
+        authorityList.add(new SimpleGrantedAuthority("ADMIN"));
         return new User("David","$2a$10$EFLI1j7Zz8fcX5dZtjt9hebXSMRPu.xbSZ6JmjVYndM5hUWf1/fwS", authorityList);
     }
 }
