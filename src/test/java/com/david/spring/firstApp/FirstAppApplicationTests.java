@@ -38,12 +38,14 @@ class FirstAppApplicationTests {
 		//{bcryp}$2a$10$EFLI1j7Zz8fcX5dZtjt9hebXSMRPu.xbSZ6JmjVYndM5hUWf1/fwS
 		//{pbkdf}f1b960ddc1b14b1a0f261cf41c4afd8162b5f8031b6df4107ea75f2b8c96e3f5cc01991c3caa9d05
 		//{scrypt}$e0801$hudSMPZOLYD1Xo8vJFlr2xch6TxtigHuKvdDIgwncl00VLiFI/InaPCP11NbVwvdZO3KLrYAHkitnVN8KbL/ZQ==$yn+LueaSk2em4VRFWYeNdwJKUjfXBGGydHgppYozj98=
+
 	}
 
 	@Test
 	void testPasswordEncoderNeverReturnSame() {
 		String passwordEncoded = new DelegatingPasswordEncoder("bcryp",encoderMap).encode("password");
 		Assertions.assertNotEquals(passwordEncoded,new DelegatingPasswordEncoder("bcryp",encoderMap).encode("password"));
+
 	}
 
 	@Test
