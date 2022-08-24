@@ -43,7 +43,8 @@ public class MySecurityConfig  {
                 .authorizeRequests(authz -> authz
                         .mvcMatchers(HttpMethod.GET,"/hello").hasAnyAuthority("READ","ADMIN")
                         .mvcMatchers(HttpMethod.GET,"/bye").hasAnyAuthority("ADMIN")
-                        .anyRequest().denyAll()).cors().disable()
+                        .anyRequest().denyAll())
+                .csrf().disable()
                 .httpBasic(Customizer.withDefaults())
                 .userDetailsService(userDetailsServiceImpl)
                 .build();
